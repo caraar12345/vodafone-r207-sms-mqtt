@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "vodafone-r207-sms-mqtt"
+version = "0.0.1"
+description = "Take incoming SMS from Vodafone R207 MiFi and put them onto MQTT"
+authors = ["Aaron Carson <aaron@aaroncarson.co.uk>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "vodafone_r207_sms_mqtt"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.28.2"
+defusedxml = "^0.7.1"
+dicttoxml = "^1.7.16"
+xmltodict = "^0.13.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

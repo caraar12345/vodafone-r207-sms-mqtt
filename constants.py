@@ -1,0 +1,11 @@
+API_VERIFICATION_TOKEN = "api/webserver/token"
+API_DEVICE_INFORMATION = "api/device/information"
+API_MONITORING_STATUS = "api/monitoring/status"
+API_LOGIN = "api/user/login"
+API_LOGIN_STATUS = "api/user/state-login"
+API_CURRENT_MOBILE_NET = "api/net/current-plmn"
+API_SMS_LIST = "api/sms/sms-list"
+API_DELETE_SMS = "api/sms/delete-sms"
+
+DEFAULT_ROUTER_IP = "192.168.254.1"
+DEFAULT_ADMIN_PWD = "admin"
