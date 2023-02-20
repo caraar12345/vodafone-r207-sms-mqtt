@@ -52,6 +52,8 @@ class VodafoneDevice:
     def refreshDeviceStatus(self):
         self.network = self.getNetwork()
         self.imei = self.getInformation()["Imei"]
+        self.serial_number = self.getInformation()["SerialNumber"]
+        self.name = self.getInformation()["DeviceName"]
         self.battery_level = self.getDeviceStatus()["BatteryPercent"]
         self.signal_strength = int(
             int(self.getDeviceStatus()["SignalIcon"])
@@ -60,6 +62,13 @@ class VodafoneDevice:
         )
         self.signal_icon = self.getDeviceStatus()["SignalIcon"]
         self.max_signal = self.getDeviceStatus()["maxsignal"]
+        self.description = f"""
+Name:    {self.name}
+Network: {self.network}
+IMEI:    {self.imei}
+Serial:  {self.serial_number}
+Battery: {self.battery_level}%
+Signal:  {self.signal_strength}%"""
 
     def getNetwork(self):
         return self.makeGetRequest(constants.API_CURRENT_MOBILE_NET)["response"][

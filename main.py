@@ -11,12 +11,5 @@ if __name__ == "__main__":
     print(vodafone.getSmsList())
     while True:
         vodafone.refreshDeviceStatus()
-        print(
-            vodafone.network,
-            vodafone.imei,
-            vodafone.battery_level,
-            vodafone.signal_strength,
-            vodafone.signal_icon,
-            vodafone.max_signal,
-        )
+        print(vodafone.description)
         time.sleep(5)
