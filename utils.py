@@ -1,5 +1,6 @@
 from dicttoxml import dicttoxml
 from datetime import datetime
+import hashlib
 
 
 def dictToReqXml(reqDict):
@@ -28,8 +29,9 @@ def genSmsListXml(
 
 def msgParser(messageDict):
     return {
+        "sms_hash": hashlib.sha256(str(messageDict).encode()).hexdigest(),
         "timestamp": datetime.strptime(messageDict["Date"], "%Y-%m-%d %H:%M:%S"),
-        "msg_id": messageDict["Index"],
         "sender": messageDict["Phone"],
-        "message": messageDict["Content"],
+        "content": messageDict["Content"],
+        "sms_index": messageDict["Index"],
     }
