@@ -147,6 +147,42 @@ files = [
 ]
 
 [[package]]
+name = "mariadb"
+version = "1.1.6"
+description = "Python MariaDB extension"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "mariadb-1.1.6-cp310-cp310-win32.whl", hash = "sha256:b8db1d71c914de000953b8b7d3554838593db97a144075ea52bc439b85d1ec64"},
+    {file = "mariadb-1.1.6-cp310-cp310-win_amd64.whl", hash = "sha256:876b40420fb0d897c928e8f486deb419631464972cb19b9e0ca0206a57944bef"},
+    {file = "mariadb-1.1.6-cp311-cp311-win32.whl", hash = "sha256:f18f26b67fe4bbd57212cd42593b1a43206f758353cfe400983ee23542bed2c5"},
+    {file = "mariadb-1.1.6-cp311-cp311-win_amd64.whl", hash = "sha256:95e2bc091b05ab16a2cf0083a927670bc99b813dfd35cec989e6f2f6c7c60a27"},
+    {file = "mariadb-1.1.6-cp37-cp37m-win32.whl", hash = "sha256:979005321961b62a0a84bfb8046784a473ce390dff8c97fe362ac21f1d3e6b26"},
+    {file = "mariadb-1.1.6-cp37-cp37m-win_amd64.whl", hash = "sha256:ffd7bc78f3b408f2074d804f3834ef8343e32df935549623c8e67938ac4be146"},
+    {file = "mariadb-1.1.6-cp38-cp38-win32.whl", hash = "sha256:9928ffc43a582d0c44f25d2e7096cf97d049d02a76fcd24e67d4527db13b5af0"},
+    {file = "mariadb-1.1.6-cp38-cp38-win_amd64.whl", hash = "sha256:bc8195c1dd5510730126b7d76a69bab1450dcb7690edffafc891a7f1e848a33e"},
+    {file = "mariadb-1.1.6-cp39-cp39-win32.whl", hash = "sha256:cb4af75855e6d33824472e692220b67064b43df6f9b441c385463cb851509d78"},
+    {file = "mariadb-1.1.6-cp39-cp39-win_amd64.whl", hash = "sha256:34d73bcc7d159c86b2c0d7041880f609eaf32d876c3d06534a677b05d99c905d"},
+    {file = "mariadb-1.1.6.tar.gz", hash = "sha256:af17a7eb29d24e9ac00f323909c4ba0c47f643ee4b7b890a158cb855ec866454"},
+]
+
+[package.dependencies]
+packaging = "*"
+
+[[package]]
+name = "packaging"
+version = "23.0"
+description = "Core utilities for Python packages"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "packaging-23.0-py3-none-any.whl", hash = "sha256:714ac14496c3e68c99c29b00845f7a2b85f3bb6f1078fd9f72fd20f0570002b2"},
+    {file = "packaging-23.0.tar.gz", hash = "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"},
+]
+
+[[package]]
 name = "paho-mqtt"
 version = "1.6.1"
 description = "MQTT version 5.0/3.1.1 client class"
@@ -214,4 +250,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "13eed09d59274289e40b2de4a1e1ddaf54980408d10701e53f556af5ea8210b8"
+content-hash = "8d8c063b2ba905898e35d724ff7b7a9ce0d179d9e300a692f5910d4860e2417a"

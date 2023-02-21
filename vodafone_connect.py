@@ -4,6 +4,7 @@ import xmltodict
 from datetime import datetime, timedelta
 from base64 import b64encode
 from utils import *
+import mqtt
 
 
 class VodafoneDevice:
@@ -101,12 +102,15 @@ Signal:  {self.signal_strength}%"""
         return True
 
     def getSmsList(self):
-        return xmltodict.parse(
-            self.makePostRequest(
-                constants.API_SMS_LIST,
-                genSmsListXml(),
-            )
-        )["response"]["Messages"]["Message"]
+        sms_list = self.makePostRequest(
+            constants.API_SMS_LIST,
+            genSmsListXml(),
+        )
+        print(xmltodict.parse(sms_list))
+        if xmltodict.parse(sms_list)["response"]["Count"] == "0":
+            return
+        else:
+            return xmltodict.parse(sms_list)["response"]["Messages"]
 
     def deleteSms(self, smsIndex):
         self.loginRequired()
