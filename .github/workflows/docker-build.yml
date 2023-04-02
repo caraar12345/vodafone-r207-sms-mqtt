@@ -52,7 +52,7 @@ jobs:
           type=raw,value=${{ steps.package_version.outputs.value }}
           type=sha
 
-     sssssSSSSSSSs - name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v3
         id: docker_build_push
         with:
