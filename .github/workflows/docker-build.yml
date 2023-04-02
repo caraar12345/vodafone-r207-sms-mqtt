@@ -1,4 +1,4 @@
-name: Docker build - scanservjs
+name: Docker build
 on:
   push:
     branches:
@@ -40,7 +40,7 @@ jobs:
 
       - name: Docker metadata
         id: docker_meta
-        uses: docker/metadata       -action@v4
+        uses: docker/metadata-action@v4
         with:
         # list of Docker images to use as base name for tags
         images: |
