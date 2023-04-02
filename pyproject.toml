@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vodafone-r207-sms-mqtt"
-version = "0.0.1"
+version = "0.1.0"
 description = "Take incoming SMS from Vodafone R207 MiFi and publish them onto MQTT"
 authors = ["Aaron Carson <aaron@aaroncarson.co.uk>"]
 license = "MIT"
