@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "vodafone-r207-sms-mqtt"
 version = "0.0.1"
-description = "Take incoming SMS from Vodafone R207 MiFi and put them onto MQTT"
+description = "Take incoming SMS from Vodafone R207 MiFi and publish them onto MQTT"
 authors = ["Aaron Carson <aaron@aaroncarson.co.uk>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "vodafone_r207_sms_mqtt"}]
+packages = []
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -16,6 +16,8 @@ xmltodict = "^0.13.0"
 paho-mqtt = "^1.6.1"
 mariadb = "^1.1.6"
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
 
 [build-system]
 requires = ["poetry-core"]

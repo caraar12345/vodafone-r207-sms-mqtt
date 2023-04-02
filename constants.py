@@ -6,6 +6,8 @@ API_LOGIN_STATUS = "api/user/state-login"
 API_CURRENT_MOBILE_NET = "api/net/current-plmn"
 API_SMS_LIST = "api/sms/sms-list"
 API_DELETE_SMS = "api/sms/delete-sms"
+API_WLAN_BASIC_SETTINGS = "api/wlan/basic-settings"
+API_WLAN_SECURITY_SETTINGS = "api/wlan/security-settings"
 
 DEFAULT_ROUTER_IP = "192.168.254.1"
 DEFAULT_ADMIN_PWD = "admin"

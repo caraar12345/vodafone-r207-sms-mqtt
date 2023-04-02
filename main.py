@@ -2,13 +2,25 @@ import time
 from utils import *
 import db
 import mqtt
+import config
+
 
 if __name__ == "__main__":
+    voda_logger.warning("Starting...")
     import constants
     import vodafone_connect
 
+    router_ip = (
+        config.ROUTER_ADDRESS if config.ROUTER_ADDRESS else constants.DEFAULT_ROUTER_IP
+    )
+    admin_pwd = (
+        config.ADMIN_PASSWORD if config.ADMIN_PASSWORD else constants.DEFAULT_ADMIN_PWD
+    )
+    ssl = config.ROUTER_SSL if config.ROUTER_SSL else False
+    ssl_root = config.ROUTER_SSL_ROOT if config.ROUTER_SSL_ROOT else None
+
     vodafone = vodafone_connect.VodafoneDevice(
-        constants.DEFAULT_ROUTER_IP, constants.DEFAULT_ADMIN_PWD
+        router_ip, admin_pwd, ssl, ssl_root, config.WIFI_SETTINGS_TO_MQTT
     )
 
     mqttCli = mqtt.MqttClient("vodafone-r207-sms-mqtt", vodafone_device=vodafone)
@@ -19,25 +31,16 @@ if __name__ == "__main__":
 
     while True:
         sms_list = vodafone.getSmsList()
-        print("+1", sms_list)
         if sms_list == None:
             pass
-        elif len(sms_list) == 1:
-            for msg in sms_list:
-                print("+4", sms_list["Message"])
-                msgData = msgParser(sms_list["Message"])
-                mariaDb.storeSms(msgData)
-                mqttCli.publishNewSms(msgData)
-                vodafone.deleteSms(msgData["sms_index"])
 
-        elif sms_list != None:
-            for msg in sms_list:
-                print("+3", msg)
-                msgData = msgParser(msg)
-                mariaDb.storeSms(msgData)
-                mqttCli.publishNewSms(msgData)
-                vodafone.deleteSms(msgData["sms_index"])
+        elif type(sms_list["Message"]) == dict:
+            msgHandler(sms_list["Message"], mariaDb, mqttCli, vodafone, single=True)
+
+        else:
+            for msg in sms_list["Message"]:
+                msgHandler(msg, mariaDb, mqttCli, vodafone, single=False)
 
         vodafone.refreshDeviceStatus()
-        print(vodafone.description)
+        mqttCli.publishDeviceStatus()
         time.sleep(5)

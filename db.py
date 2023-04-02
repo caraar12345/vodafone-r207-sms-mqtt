@@ -1,6 +1,7 @@
 import mariadb
 import config
 from datetime import datetime
+from utils import voda_logger
 
 # import logging
 # logger = logging.getLogger(__name__)
@@ -33,7 +34,9 @@ class DatabaseInstance:
 
         except mariadb.Error as e:
             # logging.error(f"❌ Error connecting to MariaDB on {config.MARIADB_HOST}: {e}")
-            print(f"❌ Error connecting to MariaDB on {config.MARIADB_HOST}: {e}")
+            voda_logger.critical(
+                f"❌ Error connecting to MariaDB on {config.MARIADB_HOST}: {e}"
+            )
             return False, None
 
         self.db_cur = self.db_conn.cursor()
@@ -66,7 +69,9 @@ class DatabaseInstance:
                     smsDict["sms_index"],
                 ),
             )
+            self.db_conn.commit()
+            return True
         except mariadb.IntegrityError as e:
-            print(f"{smsDict['sms_hash']} is already in the database")
-
-        self.db_conn.commit()
+            voda_logger.warning(f"{smsDict['sms_hash']} is already in the database")
+            self.db_conn.commit()
+            return False

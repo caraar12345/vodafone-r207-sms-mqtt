@@ -28,6 +28,7 @@ class MqttClient:
             self.mqttClient.tls_set_context()
 
         self.mqttClient.connect(host, port)
+        self.setUpMqttDiscovery()
 
     def setUpMqttDiscovery(self):
         topic = (
@@ -35,39 +36,119 @@ class MqttClient:
             + "/sensor/"
             + self.client_id
             + "/"
-            + self.vodafone_device.getInformation()["SerialNumber"]
+            + self.vodafone_device.serial_number
             + "/config"
         )
-        payload = json.dumps(
-            {
-                "name": f"R207 Latest SMS",
-                "state_topic": self.mqtt_discovery_prefix
-                + "/sensor/"
-                + self.client_id
-                + "/"
-                + self.vodafone_device.getInformation()["SerialNumber"]
-                + "/received_sms",
-            }
+        state_topic = (
+            self.mqtt_discovery_prefix
+            + "/sensor/"
+            + self.client_id
+            + "/"
+            + self.vodafone_device.serial_number
         )
+        device = {
+            "identifiers": [self.vodafone_device.serial_number],
+            "name": self.vodafone_device.name,
+            "model": "R207",
+            "manufacturer": "Vodafone",
+        }
+        payload = {
+            "latest_sms": {
+                "name": f"{self.vodafone_device.name} Latest SMS",
+                "state_topic": state_topic + "/received_sms",
+                "value_template": "{{ value_json['content'] }}",
+                "json_attributes_topic": state_topic + "/received_sms",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_received_sms",
+            },
+            "battery": {
+                "name": f"{self.vodafone_device.name} Battery",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['battery'] }}",
+                "unit_of_measurement": "%",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_battery",
+            },
+            "imei": {
+                "name": f"{self.vodafone_device.name} IMEI",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['imei'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_imei",
+            },
+            "serial": {
+                "name": f"{self.vodafone_device.name} Serial",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['serial'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_serial",
+            },
+            "signal": {
+                "name": f"{self.vodafone_device.name} Signal Strength",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['signal'] }}",
+                "unit_of_measurement": "%",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_signal",
+            },
+            "network": {
+                "name": f"{self.vodafone_device.name} Network",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['network'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_network",
+            },
+            "wifi_enabled": {
+                "name": f"{self.vodafone_device.name} Wi-Fi Enabled",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['wifi'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_wifi_enabled",
+            },
+        }
 
-        self.mqttClient.publish(topic, payload, retain=True)
+        if config.WIFI_SETTINGS_TO_MQTT:
+            payload["ssid"] = {
+                "name": f"{self.vodafone_device.name} SSID",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['ssid'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_ssid",
+            }
 
-        # name: SMS2MQTT Latest Message
-        # state_topic: sms2mqtt/received
-        # value_template: "{{ value_json['text'] }}"
-        # unique_id: sms2mqtt_received_sms_1
-        # json_attributes_topic: sms2mqtt/received
-        # availability_topic: sms2mqtt/connected
-        # payload_available: "1"
-        # payload_not_available: "0"
-        # state_class: measurement
+            payload["wpa_psk"] = {
+                "name": f"{self.vodafone_device.name} WPA2 PSK",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['wpa_psk'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_wpa_psk",
+            }
+
+            payload["ssid_broadcast"] = {
+                "name": f"{self.vodafone_device.name} SSID Broadcast",
+                "state_topic": state_topic + "/device_status",
+                "value_template": "{{ value_json['ssid_broadcast'] }}",
+                "device": device,
+                "unique_id": self.vodafone_device.serial_number + "_ssid_broadcast",
+            }
+
+        for entity in payload.keys():
+            topic = (
+                self.mqtt_discovery_prefix
+                + "/sensor/"
+                + "vodafone_"
+                + self.vodafone_device.serial_number
+                + "/"
+                + entity
+                + "/config"
+            )
+
+            self.mqttClient.publish(topic, json.dumps(payload[entity]), retain=True)
 
     def publishNewSms(self, smsParsedDict):
         smsParsedDict["timestamp"] = smsParsedDict["timestamp"].strftime(
             "%Y-%m-%d %H:%M:%S"
         )
-
-        self.setUpMqttDiscovery()
 
         try:
             self.mqttClient.publish(
@@ -78,6 +159,21 @@ class MqttClient:
                 + self.vodafone_device.getInformation()["SerialNumber"]
                 + "/received_sms",
                 json.dumps(smsParsedDict),
+            )
+        except ssl.SSLEOFError as e:
+            pass
+
+    def publishDeviceStatus(self):
+        device_status = self.vodafone_device.mqtt_description
+        try:
+            self.mqttClient.publish(
+                self.mqtt_discovery_prefix
+                + "/sensor/"
+                + self.client_id
+                + "/"
+                + self.vodafone_device.getInformation()["SerialNumber"]
+                + "/device_status",
+                json.dumps(device_status),
             )
         except ssl.SSLEOFError as e:
             pass
