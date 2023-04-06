@@ -17,7 +17,7 @@ RUN pip install "poetry==${POETRY_VERSION}" && \
     ./mariadb_repo_setup --mariadb-server-version="mariadb-10.6" && \
     apt install -y libmariadb3 libmariadb-dev build-essential && \
     rm mariadb_repo_setup && \
-    apt purge -y wget && \
+    apt purge -y curl && \
     poetry install --no-interaction --no-ansi --without dev
 
 ENTRYPOINT [ "poetry", "run", "python3", "/app/main.py" ]

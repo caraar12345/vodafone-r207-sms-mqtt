@@ -60,14 +60,13 @@ jobs:
             type=sha
 
       - name: Build and push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         id: docker_build_push
         with:
           context: .
-          file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          cache-to: gha
-          cache-from: gha
+          cache-to: type=gha
+          cache-from: type=gha,mode=max
